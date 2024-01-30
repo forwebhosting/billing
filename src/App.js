@@ -1,5 +1,5 @@
 // src/App.js
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import store from './redux/store';
@@ -17,47 +17,70 @@ const ProtectedRoute = ({ element, authenticated }) => {
 function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const navigate = useNavigate();
+  const [hasNavigated, setHasNavigated] = useState(false);
 
-  // Initialize user details from localStorage on component mount
   useEffect(() => {
-    const storedUserDetails = {
-      email: localStorage.getItem('userEmail') || '',
-      name: localStorage.getItem('userName') || '',
-      picture: localStorage.getItem('userPicture') || '',
-    };
+    // Load user details from localStorage when the app starts
+    const userEmail = localStorage.getItem('userEmail');
+    const userName = localStorage.getItem('userName');
+    const userPicture = localStorage.getItem('userPicture');
 
-    // Dispatch the SET_USER action to set user details
-    store.dispatch({
-      type: 'SET_USER',
-      payload: storedUserDetails,
-    });
-  }, []);
-
-  // Check authentication status on component mount
-  useEffect(() => {
-    // If authenticated and not already on the dashboard, navigate to the dashboard
-    if (isAuthenticated && window.location.pathname !== '/dashboard') {
-      navigate('/dashboard', { replace: true }); // Replace the current entry in the navigation history
-    }
-    // You may want to dispatch an action to refresh the user data here
-  }, [isAuthenticated, navigate]);
-
-  // Function to handle messages from other tabs/windows
-  const handleMessage = (event) => {
-    if (event.data.isAuthenticated !== undefined) {
-      store.dispatch({
-        type: event.data.isAuthenticated ? 'SIGN_IN' : 'SIGN_OUT',
-      });
-    } else {
+    if (userEmail && userName && userPicture) {
       store.dispatch({
         type: 'SET_USER',
-        payload: event.data,
+        payload: {
+          email: userEmail,
+          name: userName,
+          picture: userPicture,
+        },
       });
     }
-  };
+  }, []);
 
-  // Set up event listeners for messages from other tabs/windows
   useEffect(() => {
+    // Check authentication status when the app starts
+    if (isAuthenticated) {
+      const storedPath = sessionStorage.getItem('redirectPath') || '/dashboard';
+      setHasNavigated(true);
+      navigate(storedPath, { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    // Function to handle messages from other tabs/windows
+    const handleMessage = (event) => {
+      if (event.data.isAuthenticated !== undefined) {
+        store.dispatch({
+          type: event.data.isAuthenticated ? 'SIGN_IN' : 'SIGN_OUT',
+        });
+
+        // Redirect to dashboard or profile if authenticated
+        if (event.data.isAuthenticated && !hasNavigated) {
+          const storedPath = sessionStorage.getItem('redirectPath') || '/dashboard';
+          setHasNavigated(true);
+          navigate(storedPath, { replace: true });
+        }
+      } else {
+        store.dispatch({
+          type: 'SET_USER',
+          payload: event.data,
+        });
+
+        // Store user details in localStorage
+        localStorage.setItem('userEmail', event.data.email || '');
+        localStorage.setItem('userName', event.data.name || '');
+        localStorage.setItem('userPicture', event.data.picture || '');
+
+        // Check if already navigated
+        if (isAuthenticated && !hasNavigated) {
+          const storedPath = sessionStorage.getItem('redirectPath') || '/dashboard';
+          setHasNavigated(true);
+          navigate(storedPath, { replace: true });
+        }
+      }
+    };
+
+    // Set up event listeners for messages from other tabs/windows
     const authChannel = new BroadcastChannel('authChannel');
     const userDetailsChannel = new BroadcastChannel('userDetailsChannel');
 
@@ -70,7 +93,7 @@ function App() {
       authChannel.close();
       userDetailsChannel.close();
     };
-  }, []);
+  }, [isAuthenticated, hasNavigated, navigate]);
 
   return (
     <div>
