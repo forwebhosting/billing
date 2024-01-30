@@ -16,7 +16,7 @@ const ProtectedRoute = ({ element, authenticated }) => {
 
 function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const navigate = useNavigate(); // Add useNavigate hook
+  const navigate = useNavigate();
 
   // Initialize user details from localStorage on component mount
   useEffect(() => {
@@ -35,8 +35,8 @@ function App() {
 
   // Check authentication status on component mount
   useEffect(() => {
-    // If authenticated, navigate to the dashboard
-    if (isAuthenticated) {
+    // If authenticated and not already on the dashboard, navigate to the dashboard
+    if (isAuthenticated && window.location.pathname !== '/dashboard') {
       navigate('/dashboard', { replace: true }); // Replace the current entry in the navigation history
     }
     // You may want to dispatch an action to refresh the user data here
