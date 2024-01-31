@@ -5,6 +5,7 @@ import { signInWithGoogle } from '../../firebase';
 import { signIn, setUser } from '../../redux/actions/authActions';
 import { useNavigate } from 'react-router-dom';
 import emailjs from 'emailjs-com';
+import './Home.css'; // Import the Home.css file
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -77,8 +78,8 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <h1>Welcome to Your App</h1>
-      <button onClick={handleSignIn}>Sign In with Google</button>
+      <h1 className="home-title">Welcome to Your App</h1>
+      <button className="home-button" onClick={handleSignIn}>Sign In with Google</button>
     </div>
   );
 };

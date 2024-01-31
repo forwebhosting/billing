@@ -1,0 +1,71 @@
+/* src/components/Home/Home.css */
+
+.home-container {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px;
+    /* background-color: #f8f8f8; */
+    border-radius: 12px;
+    /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); */
+  }
+  
+  .home-title {
+    font-size: 3em;
+    color: #333;
+    margin-bottom: 20px;
+    letter-spacing: 1px;
+    font-weight: bold;
+  }
+  
+  .home-button {
+    padding: 12px 24px;
+    font-size: 1.2em;
+    background-color: #4285f4;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .home-button:hover {
+    background-color: #357ae8;
+    transform: scale(1.05);
+  }
+  
+  /* Additional Styles for a Better Look */
+  
+  .home-container:before {
+    content: '\1F680'; /* Rocket emoji */
+    font-size: 4em;
+    display: block;
+    margin-bottom: 20px;
+    animation: bounce 1s infinite alternate;
+  }
+  
+  .home-container:after {
+    content: '🚀 Get ready for an amazing experience!';
+    font-size: 1.2em;
+    display: block;
+    color: #777;
+  }
+  
+  @keyframes bounce {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .home-title {
+      font-size: 2.5em;
+    }
+  
+    .home-button {
+      font-size: 1em;
+    }
+  }
+  

@@ -9,13 +9,14 @@ const Profile = () => {
     <div>
       <h2>Profile</h2>
       <div>
-        <strong>Email:</strong> {user.email}
+        <strong>Profile Picture:</strong> <img src={user.picture} alt="Profile" />
       </div>
+     
       <div>
         <strong>Name:</strong> {user.name} {/* Assuming displayName is used for the user's name */}
       </div>
       <div>
-        <strong>Profile Picture:</strong> <img src={user.picture} alt="Profile" />
+        <strong>Email:</strong> {user.email}
       </div>
     </div>
   );

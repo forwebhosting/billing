@@ -16,6 +16,7 @@ const ProtectedRoute = ({ element, authenticated }) => {
 
 function App() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const [hasNavigated, setHasNavigated] = useState(false);
 
@@ -39,12 +40,14 @@ function App() {
 
   useEffect(() => {
     // Check authentication status when the app starts
-    if (isAuthenticated) {
-      const storedPath = sessionStorage.getItem('redirectPath') || '/dashboard';
+    if (isAuthenticated && !hasNavigated) {
+      // Determine the target path based on the authentication status
+      const targetPath = isAuthenticated ? '/dashboard' : '/profile';
+
       setHasNavigated(true);
-      navigate(storedPath, { replace: true });
+      navigate(targetPath, { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, hasNavigated, navigate]);
 
   useEffect(() => {
     // Function to handle messages from other tabs/windows
@@ -95,10 +98,18 @@ function App() {
     };
   }, [isAuthenticated, hasNavigated, navigate]);
 
+  const toggleSidebar = () => {
+    setSidebarOpen(!isSidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    setSidebarOpen(false);
+  };
+
   return (
     <div>
-      <Header />
-      <Sidebar />
+      <Header toggleSidebar={toggleSidebar} />
+      <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route
