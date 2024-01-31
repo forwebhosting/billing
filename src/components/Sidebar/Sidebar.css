@@ -20,6 +20,7 @@
 .sidebar ul {
   list-style-type: none;
   padding: 0;
+  margin-left: 20%; 
 }
 
 .sidebar li {
@@ -46,6 +47,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  margin-top: 10px; /* Added margin-top for spacing */
 }
 
 .sidebar button:hover {

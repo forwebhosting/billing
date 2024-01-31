@@ -3,6 +3,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signOut } from '../../redux/actions/authActions';
+import { IoIosHome, IoMdPerson, IoMdLogOut } from 'react-icons/io';
 import './Sidebar.css'; // Import the corresponding CSS file
 
 const Sidebar = ({ isOpen, closeSidebar }) => {
@@ -21,20 +22,23 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
 
   return (
     <nav className={`sidebar ${isOpen ? 'open' : ''}`}>
+      
       <ul>
         <li>
           <Link to="/dashboard" onClick={closeSidebar}>
-            Dashboard
+            <IoIosHome /> Dashboard
           </Link>
         </li>
         <li>
           <Link to="/profile" onClick={closeSidebar}>
-            Profile
+            <IoMdPerson /> Profile
           </Link>
         </li>
         {isAuthenticated && (
           <li>
-            <button onClick={handleLogout}>Logout</button>
+            <button onClick={handleLogout}>
+              <IoMdLogOut /> Logout
+            </button>
           </li>
         )}
       </ul>
